@@ -1,0 +1,643 @@
+:root {
+  --bg-1: #05040f;
+  --bg-2: #120c25;
+  --bg-card: rgba(14, 12, 28, 0.76);
+  --bg-card-strong: rgba(28, 22, 60, 0.82);
+  --border-soft: rgba(255, 255, 255, 0.08);
+  --accent: #ff6a3d;
+  --accent-strong: #ffb347;
+  --accent-soft: rgba(255, 106, 61, 0.2);
+  --text-primary: #f8f9ff;
+  --text-muted: rgba(248, 249, 255, 0.7);
+  --success: #60f5d2;
+  --warning: #ffe15d;
+  --danger: #ff4f6d;
+  --shadow: 0 30px 60px -40px rgba(0, 0, 0, 0.85);
+  --radius: 28px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body.challenge-body {
+  margin: 0;
+  font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, rgba(87, 36, 180, 0.26), transparent 55%),
+    linear-gradient(140deg, var(--bg-1) 0%, var(--bg-2) 70%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 0 18px 80px;
+  position: relative;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.backdrop__grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 0);
+  background-size: 60px 60px;
+  opacity: 0.22;
+  transform: translateZ(0);
+}
+
+.backdrop__orb {
+  position: absolute;
+  filter: blur(140px);
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  opacity: 0.45;
+  animation: float 22s linear infinite;
+}
+
+.backdrop__orb--one {
+  background: #8132ff;
+  top: -120px;
+  left: -120px;
+}
+
+.backdrop__orb--two {
+  background: #ff7136;
+  bottom: -160px;
+  right: -120px;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(40px, -30px, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.challenge-hero {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 120px 0 32px;
+}
+
+.challenge-hero__inner {
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 40px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.challenge-hero__inner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(255, 122, 102, 0.35), transparent 55%);
+  mix-blend-mode: screen;
+}
+
+.challenge-hero__tag {
+  font-family: "Chakra Petch", "Space Grotesk", sans-serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: var(--accent-strong);
+  margin: 0 0 12px;
+}
+
+.challenge-hero__title {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  margin: 0 0 14px;
+}
+
+.challenge-hero__subtitle {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0;
+  max-width: 720px;
+}
+
+.challenge-hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 26px;
+}
+
+.cta-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 15px 35px -25px rgba(255, 106, 61, 0.9);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cta-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 40px -30px rgba(255, 106, 61, 0.9);
+}
+
+.cta-link--ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(6px);
+  box-shadow: none;
+}
+
+.challenge-main {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  gap: 28px;
+}
+
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 32px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.panel--auth {
+  position: relative;
+  overflow: hidden;
+}
+
+.panel--dashboard {
+  display: grid;
+  gap: 26px;
+}
+
+.panel__header h2 {
+  margin: 0 0 6px;
+}
+
+.panel__header p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.auth-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.auth-form__label {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.auth-form__input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(10, 10, 20, 0.82);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.auth-form__input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(18, 18, 34, 0.92);
+}
+
+.auth-form__password {
+  position: relative;
+}
+
+.auth-form__toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.auth-form__submit {
+  margin-top: 8px;
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(120deg, var(--accent), #ff8a6a);
+  border: none;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.auth-form__submit:hover {
+  transform: translateY(-2px);
+}
+
+.auth-form__error {
+  min-height: 18px;
+  margin: 0;
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.dashboard-header__tag {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: var(--accent-strong);
+}
+
+.dashboard-header__meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.meta-card {
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: right;
+}
+
+.meta-card--accent {
+  background: var(--accent-soft);
+}
+
+.meta-card__label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+}
+
+.meta-card__value {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.panel-block {
+  background: var(--bg-card-strong);
+  border-radius: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 28px;
+}
+
+.panel-block__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.panel-block__header h3 {
+  margin: 0;
+}
+
+.panel-block__header p {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+}
+
+.momentum-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.momentum-card {
+  background: rgba(5, 4, 20, 0.7);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.momentum-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.15), transparent 55%);
+  mix-blend-mode: screen;
+}
+
+.momentum-card--highlight {
+  border-color: rgba(255, 165, 0, 0.4);
+}
+
+.momentum-card h4 {
+  margin: 0;
+  font-size: 0.96rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.momentum-card__value {
+  margin: 12px 0 6px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.momentum-card__note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.leaderboard {
+  margin-top: 22px;
+  overflow-x: auto;
+}
+
+.leaderboard__table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text-primary);
+}
+
+.leaderboard__table th,
+.leaderboard__table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.leaderboard__table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.leaderboard__table tbody tr:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.leaderboard__table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.leaderboard__table .is-self {
+  background: rgba(96, 245, 210, 0.12);
+}
+
+.leaderboard__pace {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.leaderboard__pace-bar {
+  display: inline-block;
+  width: 70px;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.leaderboard__pace-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--success), #66b3ff);
+}
+
+.stealth-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 228, 82, 0.14);
+  border: 1px solid rgba(255, 228, 82, 0.5);
+  color: var(--warning);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.panel-block__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.ghost-button {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s ease;
+}
+
+.ghost-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ghost-button--wide {
+  width: 100%;
+  justify-content: center;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ghost-button--upload {
+  text-align: center;
+}
+
+.weeks {
+  margin-top: 26px;
+  display: grid;
+  gap: 18px;
+}
+
+.week-card {
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(5, 4, 20, 0.75);
+  overflow: hidden;
+}
+
+.week-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 22px;
+  cursor: pointer;
+}
+
+.week-card__header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.week-card__header span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.week-card__body {
+  padding: 0 22px 22px;
+  display: none;
+}
+
+.week-card.is-open .week-card__body {
+  display: block;
+}
+
+.week-card__days {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.week-card__days th,
+.week-card__days td {
+  text-align: left;
+  padding: 12px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.week-card__days tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.week-card__days input {
+  width: 120px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.week-card__days input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.week-card__total {
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.week-card__day-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.week-card__day-label span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.8rem;
+}
+
+.week-card__day-label.is-today {
+  color: var(--success);
+}
+
+.week-card__day-label.is-today span {
+  background: rgba(96, 245, 210, 0.16);
+}
+
+.backup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.dashboard-footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+code {
+  font-family: "Chakra Petch", "Space Grotesk", monospace;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+@media (max-width: 760px) {
+  body.challenge-body {
+    padding: 0 12px 60px;
+  }
+
+  .challenge-hero {
+    padding-top: 90px;
+  }
+
+  .panel {
+    padding: 26px;
+  }
+
+  .panel-block {
+    padding: 24px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dashboard-header__meta {
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .panel-block__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .panel-block__actions {
+    width: 100%;
+  }
+
+  .panel-block__actions .ghost-button {
+    flex: 1;
+    text-align: center;
+  }
+}

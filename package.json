@@ -5,8 +5,8 @@
   "description": "A clean, beautiful and responsive portfolio template for Developers!",
   "source": "src/index.html",
   "scripts": {
-    "start": "parcel",
-    "build": "parcel build"
+    "start": "parcel src/index.html src/projects.html src/w/index.html",
+    "build": "parcel build src/index.html src/projects.html src/w/index.html"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
   "homepage": "https://github.com/cobiwave/simplefolio#readme",
   "devDependencies": {
     "@parcel/transformer-sass": "^2.8.2",
-    "parcel": "^2.0.0", 
+    "parcel": "^2.0.0",
     "prettier": "^2.8.1"
   },
   "dependencies": {
