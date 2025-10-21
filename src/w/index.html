@@ -2,32 +2,242 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Redirecting…</title>
-    <link rel="canonical" href="https://woolston.dev/ww/" />
-    <meta name="robots" content="noindex" />
-    <script>
-      window.location.replace('/ww/');
-    </script>
-    <style>
-      body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        margin: 0;
-        background: #f7f7f7;
-        color: #222;
-      }
-      a {
-        color: inherit;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wooly Walking Challenge 2025</title>
+    <meta
+      name="description"
+      content="Join the Woolston family Wooly Walking Challenge 2025. Log your steps, unlock achievements, and chase bragging rights all the way to Christmas."
+    />
+    <link rel="icon" type="image/svg+xml" href="./challenge-badge.svg" />
+    <link rel="apple-touch-icon" href="./challenge-badge.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Chakra+Petch:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.scss" />
   </head>
-  <body>
-    <p>Redirecting to <a href="/ww/">woolston.dev/ww/</a>…</p>
-    <noscript>
-      <p><a href="/ww/">Continue to woolston.dev/ww/</a></p>
-    </noscript>
+  <body class="challenge-body" data-theme="dark">
+    <div class="backdrop">
+      <div class="backdrop__orb backdrop__orb--one"></div>
+      <div class="backdrop__orb backdrop__orb--two"></div>
+      <div class="backdrop__grid"></div>
+    </div>
+
+    <header class="challenge-hero">
+      <div class="challenge-hero__inner">
+        <div class="theme-switcher" id="theme-switcher">
+          <span class="theme-switcher__label" id="theme-toggle-label">Dark mode</span>
+          <button
+            class="theme-switcher__button"
+            id="theme-toggle"
+            type="button"
+            role="switch"
+            aria-label="Toggle color theme"
+            aria-checked="false"
+            data-state="dark"
+          >
+            <span class="theme-switcher__icon theme-switcher__icon--sun" aria-hidden="true">☀️</span>
+            <span class="theme-switcher__icon theme-switcher__icon--moon" aria-hidden="true">🌙</span>
+            <span class="theme-switcher__thumb"></span>
+          </button>
+        </div>
+        <p class="challenge-hero__tag">🏆 Third Annual Wooly Walking Challenge</p>
+        <h1 class="challenge-hero__title">Walk proud. Walk hard. Claim the crown.</h1>
+        <p class="challenge-hero__subtitle">
+          The family step-off returns from <strong>6 October</strong> to <strong>21 December 2025</strong>.
+          Log your steps, track the leaderboard, and keep your totals secret once the stealth phase begins.
+        </p>
+        <div class="challenge-hero__cta">
+          <a href="#auth-panel" class="cta-link">Log in to start tracking</a>
+          <a href="../index.html" class="cta-link cta-link--ghost">← Back to portfolio</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="challenge-main">
+      <section id="auth-panel" class="panel panel--auth">
+        <div class="panel__header">
+          <h2>Family login</h2>
+          <p>Use your Wooly Walking username. Passwords start as <code>Password1</code>.</p>
+        </div>
+        <form id="login-form" class="auth-form" autocomplete="off">
+          <label class="auth-form__label" for="username">Username</label>
+          <input
+            class="auth-form__input"
+            type="text"
+            id="username"
+            name="username"
+            placeholder="e.g. ben_woolston"
+            required
+            autocapitalize="none"
+            spellcheck="false"
+          />
+
+          <label class="auth-form__label" for="password">Password</label>
+          <div class="auth-form__password">
+            <input
+              class="auth-form__input"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Password"
+              required
+            />
+            <button class="auth-form__toggle" type="button" aria-label="Toggle password visibility">
+              👀
+            </button>
+          </div>
+
+          <button class="auth-form__submit" type="submit">Enter the arena</button>
+          <p class="auth-form__error" id="auth-error" role="alert"></p>
+        </form>
+      </section>
+
+      <section id="dashboard" class="panel panel--dashboard" hidden>
+        <header class="dashboard-header">
+          <div>
+            <p class="dashboard-header__tag">You made it.</p>
+            <h2 id="dashboard-title">Welcome, Walker!</h2>
+          </div>
+          <div class="dashboard-header__meta">
+            <div class="meta-card">
+              <span class="meta-card__label">Current phase</span>
+              <span class="meta-card__value" id="phase-indicator">Warm-up</span>
+            </div>
+            <div class="meta-card meta-card--accent">
+              <span class="meta-card__label">Days left</span>
+              <span class="meta-card__value" id="days-left">0</span>
+            </div>
+          </div>
+        </header>
+
+        <section class="panel-block" aria-labelledby="motivation-title">
+          <header class="panel-block__header">
+            <h3 id="motivation-title">Momentum</h3>
+            <p id="motivation-copy">Stay moving, stay legendary.</p>
+          </header>
+          <div class="momentum-grid">
+            <article class="momentum-card">
+              <h4>Total steps</h4>
+              <p class="momentum-card__value" id="personal-total">0</p>
+              <p class="momentum-card__note" id="personal-rank">Ranked —</p>
+            </article>
+            <article class="momentum-card">
+              <h4>Best day</h4>
+              <p class="momentum-card__value" id="personal-best">0</p>
+              <p class="momentum-card__note" id="personal-best-date">—</p>
+            </article>
+            <article class="momentum-card">
+              <h4>Streak</h4>
+              <p class="momentum-card__value" id="personal-streak">0</p>
+              <p class="momentum-card__note">Consecutive active days</p>
+            </article>
+            <article class="momentum-card momentum-card--highlight">
+              <h4>Achievement</h4>
+              <p class="momentum-card__value" id="personal-badge">—</p>
+              <p class="momentum-card__note" id="personal-badge-note">Unlock badges by logging steps.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel-block panel-block--chart" aria-labelledby="insights-title">
+          <header class="panel-block__header">
+            <div>
+              <h3 id="insights-title">Weekly momentum</h3>
+              <p>Track how your weekly totals stack up against the crown pace.</p>
+            </div>
+            <div class="chart-legend" aria-hidden="true">
+              <span class="chart-legend__item">
+                <span class="chart-legend__swatch chart-legend__swatch--primary"></span>
+                Your steps
+              </span>
+              <span class="chart-legend__item">
+                <span class="chart-legend__swatch chart-legend__swatch--goal"></span>
+                Goal pace
+              </span>
+            </div>
+          </header>
+          <div class="chart-card shadcn-card">
+            <div class="chart-card__header">
+              <div>
+                <p class="chart-card__eyebrow">Personal trend</p>
+                <h4 class="chart-card__title">Tracking weekly output</h4>
+              </div>
+              <div class="chart-card__stat">
+                <span class="chart-card__stat-label">Avg / wk</span>
+                <span class="chart-card__stat-value" id="chart-average">0</span>
+              </div>
+            </div>
+            <div class="chart-card__body">
+              <canvas id="progress-chart" height="260" aria-label="Weekly step totals compared to goal" role="img"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel-block" aria-labelledby="leaderboard-title">
+          <header class="panel-block__header">
+            <div>
+              <h3 id="leaderboard-title">Leaderboard</h3>
+              <p id="leaderboard-caption">Totals refresh whenever someone logs their steps.</p>
+            </div>
+            <span class="stealth-pill" id="stealth-pill" hidden>Stealth phase live</span>
+          </header>
+          <div class="leaderboard">
+            <table class="leaderboard__table">
+              <thead>
+                <tr>
+                  <th scope="col">Rank</th>
+                  <th scope="col">Walker</th>
+                  <th scope="col">Total steps</th>
+                  <th scope="col">Weekly pace</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel-block" aria-labelledby="steps-title">
+          <header class="panel-block__header">
+            <div>
+              <h3 id="steps-title">Log your steps</h3>
+              <p>Enter your steps for each day. Totals update instantly.</p>
+            </div>
+            <div class="panel-block__actions">
+              <button class="ghost-button" id="collapse-weeks">Collapse all</button>
+              <button class="ghost-button" id="expand-weeks">Expand all</button>
+            </div>
+          </header>
+          <div id="weeks-container" class="weeks"></div>
+        </section>
+
+        <section class="panel-block" aria-labelledby="backup-title">
+          <header class="panel-block__header">
+            <div>
+              <h3 id="backup-title">Backup &amp; restore</h3>
+              <p>Download your local data or import an updated file from another device.</p>
+            </div>
+          </header>
+          <div class="backup-grid">
+            <button class="ghost-button ghost-button--wide" id="download-backup">Download progress (.json)</button>
+            <label class="ghost-button ghost-button--wide ghost-button--upload">
+              <input type="file" id="import-backup" accept="application/json" hidden />
+              Import backup
+            </label>
+          </div>
+        </section>
+
+        <footer class="dashboard-footer">
+          <p>
+            Need a reset? Ping Ben. Friendly reminder: totals hide for everyone except yourself once the stealth phase kicks in.
+          </p>
+        </footer>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" integrity="sha384-qX9NVUNiEHa88IEUdsG48fuAs/SQboZLNEPoPF/MNreDvHWJExYJrfx8SWLzYwWX" crossorigin="anonymous"></script>
+    <script type="module" src="./index.js"></script>
   </body>
 </html>

@@ -9,14 +9,14 @@ npm install
 npm run start
 ```
 
-Parcel will serve every page that sits under `src/`. The new Wooly Walking Challenge now lives at `/ww/` (visit `http://localhost:1234/ww/index.html` while running the dev server). The old `/w/` address simply redirects across.
+Parcel will serve every page that sits under `src/`. The Wooly Walking Challenge now lives at `/w/` (visit `http://localhost:1234/w/index.html` while running the dev server).
 
 ## Wooly Walking Challenge 2025
 
 - **Login**: usernames e.g. `ben_woolston`, default password `Password1`.
 - **Data**: stored in the browser via `localStorage`. Use the backup/export buttons to move data between devices.
 - **Dates**: challenge runs 6 Oct – 21 Dec 2025 with a stealth phase starting 7 Dec.
-- **Build output**: `npm run build` will generate `/dist/ww/index.html`. Deploy that folder under the `ww` subpath (for example `woolston.dev/ww/`).
+- **Build output**: `npm run build` will generate `/dist/w/index.html`. Deploy that folder under the `w` subpath (for example `woolston.dev/w/`).
 
 ## Build
 
