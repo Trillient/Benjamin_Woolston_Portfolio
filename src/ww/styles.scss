@@ -188,6 +188,8 @@ body.challenge-body {
   box-shadow: var(--shadow);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .challenge-hero__inner::after {
@@ -205,7 +207,7 @@ body.challenge-body {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  z-index: 2;
+  z-index: 10;
 }
 
 .theme-switcher__label {
@@ -916,7 +918,12 @@ code {
   .theme-switcher {
     position: static;
     align-self: flex-end;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
+    order: -1;
+  }
+
+  .challenge-hero__inner {
+    padding: 32px 24px;
   }
 
   .panel {

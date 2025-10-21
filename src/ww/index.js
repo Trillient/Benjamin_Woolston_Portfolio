@@ -644,7 +644,13 @@ function renderWeeklyChart() {
   const labels = weeks.map((_, index) => `W${index + 1}`);
   const todayIso = dateToIso(new Date());
   const challengeStartIso = challengeDates[0]?.iso || todayIso;
-  const revealedWeeks = weeks.map((week) => week.dates.some((day) => day.iso <= todayIso));
+
+  // Show weeks that have started (first day of week is today or earlier)
+  const revealedWeeks = weeks.map((week) => {
+    const weekStartIso = week.dates[0].iso;
+    return weekStartIso <= todayIso;
+  });
+
   const showAllWeeks = todayIso < challengeStartIso;
   const totalsForChart = weekTotals.map((total, index) => (showAllWeeks || revealedWeeks[index] ? total : null));
   const goalData = weekTotals.map((_, index) => (showAllWeeks || revealedWeeks[index] ? WEEKLY_GOAL : null));
