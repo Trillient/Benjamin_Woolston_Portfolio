@@ -43,6 +43,10 @@ const stealthPill = document.querySelector("#stealth-pill");
 const downloadBackupBtn = document.querySelector("#download-backup");
 const importBackupInput = document.querySelector("#import-backup");
 const passwordToggle = document.querySelector(".auth-form__toggle");
+const themeToggle = document.querySelector("#theme-toggle");
+const themeToggleLabel = document.querySelector("#theme-toggle-label");
+const progressChartCanvas = document.querySelector("#progress-chart");
+const chartAverage = document.querySelector("#chart-average");
 
 let appState = {
   activeUser: null,
@@ -51,6 +55,9 @@ let appState = {
 
 const challengeDates = buildChallengeDates(CHALLENGE.start, CHALLENGE.end);
 const weeks = chunkDatesByWeek(challengeDates);
+const WEEKLY_GOAL = 70000;
+const THEME_KEY = "wooly-walking-theme";
+let progressChart = null;
 
 // Prefill username if remembered
 const lastUser = appState.data.meta.lastUser;
@@ -63,6 +70,14 @@ usernameField.focus();
 passwordToggle.addEventListener("click", () => {
   const current = passwordField.getAttribute("type");
   passwordField.setAttribute("type", current === "password" ? "text" : "password");
+});
+
+initialiseTheme();
+
+themeToggle?.addEventListener("click", () => {
+  const current = document.body.getAttribute("data-theme") === "light" ? "light" : "dark";
+  const next = current === "light" ? "dark" : "light";
+  applyTheme(next);
 });
 
 loginForm.addEventListener("submit", (event) => {
@@ -202,6 +217,7 @@ function renderDashboard() {
 
   renderMomentumCards();
   renderLeaderboard(phase);
+  renderWeeklyChart();
   renderWeeks();
 }
 
@@ -212,6 +228,9 @@ function renderMomentumCards() {
   personalBest.textContent = formatNumber(totals.bestDaySteps);
   personalBestDate.textContent = totals.bestDayLabel || "—";
   personalStreak.textContent = String(totals.currentStreak);
+  if (chartAverage) {
+    chartAverage.textContent = formatNumber(Math.round(totals.weeklyAverage));
+  }
 
   const rank = computeRank(appState.activeUser);
   personalRank.textContent = `Ranked ${rank.position} of ${rank.total}`;
@@ -342,6 +361,7 @@ function renderWeeks() {
         updateWeekTotals(index);
         renderMomentumCards();
         renderLeaderboard(resolvePhase(new Date()));
+        renderWeeklyChart();
       });
 
       inputCell.appendChild(input);
@@ -560,6 +580,189 @@ function syncImportedData(parsed) {
     dashboard.hidden = true;
     authPanel.hidden = false;
   }
+}
+
+function initialiseTheme() {
+  let stored = null;
+  try {
+    stored = window.localStorage.getItem(THEME_KEY);
+  } catch (error) {
+    stored = null;
+  }
+  let theme = stored === "light" || stored === "dark" ? stored : null;
+  if (!theme) {
+    const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+    theme = prefersLight ? "light" : "dark";
+  }
+  applyTheme(theme);
+}
+
+function applyTheme(theme) {
+  document.body.setAttribute("data-theme", theme);
+  try {
+    window.localStorage.setItem(THEME_KEY, theme);
+  } catch (error) {
+    // ignore storage issues
+  }
+  updateThemeToggle(theme);
+  if (appState.activeUser) {
+    renderWeeklyChart();
+  }
+}
+
+function updateThemeToggle(theme) {
+  if (!themeToggle) return;
+  themeToggle.dataset.state = theme;
+  themeToggle.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+  themeToggle.setAttribute("aria-checked", theme === "light" ? "true" : "false");
+  if (themeToggleLabel) {
+    themeToggleLabel.textContent = theme === "dark" ? "Dark mode" : "Light mode";
+  }
+}
+
+function renderWeeklyChart() {
+  if (!appState.activeUser || !progressChartCanvas || typeof Chart === "undefined") {
+    return;
+  }
+
+  const ctx = progressChartCanvas.getContext("2d");
+  if (!ctx) return;
+
+  const computed = window.getComputedStyle(document.body);
+  const accent = computed.getPropertyValue("--accent").trim() || "#ff6a3d";
+  const accentSoft = computed.getPropertyValue("--accent-soft").trim() || "rgba(255, 106, 61, 0.2)";
+  const success = computed.getPropertyValue("--success").trim() || "#60f5d2";
+  const textMuted = computed.getPropertyValue("--text-muted").trim() || "#a1a1aa";
+  const textPrimary = computed.getPropertyValue("--text-primary").trim() || "#111827";
+  const chartGrid = computed.getPropertyValue("--chart-grid").trim() || "rgba(160, 174, 192, 0.25)";
+  const tooltipBg = computed.getPropertyValue("--chart-tooltip-bg").trim() || "rgba(8, 10, 26, 0.94)";
+  const tooltipBorder = computed.getPropertyValue("--chart-tooltip-border").trim() || "rgba(255, 255, 255, 0.12)";
+  const borderSoft = computed.getPropertyValue("--border-soft").trim() || "rgba(255, 255, 255, 0.08)";
+
+  const userData = appState.data.participants[appState.activeUser];
+  const weekTotals = weeks.map((week) => week.dates.reduce((sum, day) => sum + (userData.dailySteps[day.iso] || 0), 0));
+  const labels = weeks.map((_, index) => `W${index + 1}`);
+  const todayIso = dateToIso(new Date());
+  const challengeStartIso = challengeDates[0]?.iso || todayIso;
+  const revealedWeeks = weeks.map((week) => week.dates.some((day) => day.iso <= todayIso));
+  const showAllWeeks = todayIso < challengeStartIso;
+  const totalsForChart = weekTotals.map((total, index) => (showAllWeeks || revealedWeeks[index] ? total : null));
+  const goalData = weekTotals.map((_, index) => (showAllWeeks || revealedWeeks[index] ? WEEKLY_GOAL : null));
+
+  const canvasHeight = progressChartCanvas.offsetHeight || progressChartCanvas.height || 260;
+  const gradient = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+  gradient.addColorStop(0, accent);
+  gradient.addColorStop(1, accentSoft || accent);
+
+  if (progressChart) {
+    progressChart.destroy();
+  }
+
+  progressChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [
+        {
+          type: "bar",
+          label: "Your steps",
+          data: totalsForChart,
+          backgroundColor: gradient,
+          borderRadius: 14,
+          borderSkipped: false,
+          maxBarThickness: 42
+        },
+        {
+          type: "line",
+          label: "Goal pace",
+          data: goalData,
+          borderColor: success,
+          borderWidth: 2,
+          borderDash: [6, 6],
+          pointBackgroundColor: success,
+          pointBorderColor: success,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          tension: 0.35
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: "index",
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: tooltipBg,
+          borderColor: tooltipBorder,
+          borderWidth: 1,
+          titleColor: textPrimary,
+          bodyColor: textPrimary,
+          displayColors: false,
+          callbacks: {
+            title(context) {
+              return context[0]?.label || "";
+            },
+            label(context) {
+              const value = context.parsed.y;
+              if (value === null || Number.isNaN(value)) return "";
+              return `${formatNumber(Math.round(value))} steps`;
+            }
+          }
+        }
+      },
+      layout: {
+        padding: {
+          top: 12,
+          right: 16,
+          left: 8,
+          bottom: 0
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          },
+          ticks: {
+            color: textMuted,
+            font: {
+              family: '"Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+              weight: "600"
+            }
+          }
+        },
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: chartGrid,
+            borderDash: [6, 6],
+            drawBorder: false
+          },
+          ticks: {
+            color: textMuted,
+            padding: 8,
+            font: {
+              family: '"Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+            },
+            callback(value) {
+              const numeric = Number(value) || 0;
+              if (numeric >= 1000) {
+                return `${Math.round(numeric / 1000)}k`;
+              }
+              return formatNumber(numeric);
+            }
+          }
+        }
+      }
+    }
+  });
 }
 
 // Auto-render if a remembered user exists and the password form was bypassed earlier.

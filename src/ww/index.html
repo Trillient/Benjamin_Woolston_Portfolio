@@ -18,7 +18,7 @@
     />
     <link rel="stylesheet" href="./styles.scss" />
   </head>
-  <body class="challenge-body">
+  <body class="challenge-body" data-theme="dark">
     <div class="backdrop">
       <div class="backdrop__orb backdrop__orb--one"></div>
       <div class="backdrop__orb backdrop__orb--two"></div>
@@ -27,6 +27,22 @@
 
     <header class="challenge-hero">
       <div class="challenge-hero__inner">
+        <div class="theme-switcher" id="theme-switcher">
+          <span class="theme-switcher__label" id="theme-toggle-label">Dark mode</span>
+          <button
+            class="theme-switcher__button"
+            id="theme-toggle"
+            type="button"
+            role="switch"
+            aria-label="Toggle color theme"
+            aria-checked="false"
+            data-state="dark"
+          >
+            <span class="theme-switcher__icon theme-switcher__icon--sun" aria-hidden="true">☀️</span>
+            <span class="theme-switcher__icon theme-switcher__icon--moon" aria-hidden="true">🌙</span>
+            <span class="theme-switcher__thumb"></span>
+          </button>
+        </div>
         <p class="challenge-hero__tag">🏆 Third Annual Wooly Walking Challenge</p>
         <h1 class="challenge-hero__title">Walk proud. Walk hard. Claim the crown.</h1>
         <p class="challenge-hero__subtitle">
@@ -126,6 +142,40 @@
           </div>
         </section>
 
+        <section class="panel-block panel-block--chart" aria-labelledby="insights-title">
+          <header class="panel-block__header">
+            <div>
+              <h3 id="insights-title">Weekly momentum</h3>
+              <p>Track how your weekly totals stack up against the crown pace.</p>
+            </div>
+            <div class="chart-legend" aria-hidden="true">
+              <span class="chart-legend__item">
+                <span class="chart-legend__swatch chart-legend__swatch--primary"></span>
+                Your steps
+              </span>
+              <span class="chart-legend__item">
+                <span class="chart-legend__swatch chart-legend__swatch--goal"></span>
+                Goal pace
+              </span>
+            </div>
+          </header>
+          <div class="chart-card shadcn-card">
+            <div class="chart-card__header">
+              <div>
+                <p class="chart-card__eyebrow">Personal trend</p>
+                <h4 class="chart-card__title">Tracking weekly output</h4>
+              </div>
+              <div class="chart-card__stat">
+                <span class="chart-card__stat-label">Avg / wk</span>
+                <span class="chart-card__stat-value" id="chart-average">0</span>
+              </div>
+            </div>
+            <div class="chart-card__body">
+              <canvas id="progress-chart" height="260" aria-label="Weekly step totals compared to goal" role="img"></canvas>
+            </div>
+          </div>
+        </section>
+
         <section class="panel-block" aria-labelledby="leaderboard-title">
           <header class="panel-block__header">
             <div>
@@ -187,6 +237,7 @@
       </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" integrity="sha384-qX9NVUNiEHa88IEUdsG48fuAs/SQboZLNEPoPF/MNreDvHWJExYJrfx8SWLzYwWX" crossorigin="anonymous"></script>
     <script type="module" src="./index.js"></script>
   </body>
 </html>
